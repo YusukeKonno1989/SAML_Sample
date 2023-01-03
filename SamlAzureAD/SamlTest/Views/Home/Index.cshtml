@@ -1,0 +1,76 @@
+﻿<div class="jumbotron">
+    <h1>テストページ</h1>
+</div>
+
+<div>
+    <div>
+        SAMLテスト
+    </div>
+
+    <div>
+        <label for="name">ID:</label>
+        <input type="text" class="login_id">
+    </div>
+
+    <div>
+        <label for="name">PassWord:</label>
+        <input type="text" class="password" />
+    </div>
+
+    <form method="POST" action="SamlProcess">
+        <div>
+            <!--<button type="button" id="btnExecute" class="btn btn-default">処理起動</button> -->
+                <input type="submit" value="開始" />
+        </div>
+        </form>
+    </div>
+
+    @section Scripts {
+    <script type="text/javascript">
+
+            $(function () {
+                var params = {
+                    Id: $('.id').val(),
+                    Password: $('.password').val()
+                };
+
+                function ProcessingStart() {
+                    var prms = JSON.parse(JSON.stringify(params));
+                    PostJSONAsync('@Url.Action("SamlProcess", "Home")', prms, function (data) {
+
+                    });
+                }
+                $("#btnExecute").click(function () {
+                    params.Id = $('.login_id').val();
+                    params.Password = $('.password').val();
+                    ProcessingStart();
+                });
+
+                function PostJSONAsync(url, prms, succeededCallback, failedCallback, userContext) {
+                    PostJSON(true, url, prms, succeededCallback, failedCallback, userContext);
+                }
+                function PostJSON(async, url, prms, succeededCallback, failedCallback, userContext) {
+                    prms.__RequestVerificationToken = $('[name=__RequestVerificationToken]').val();
+                    $.ajax({
+                        type: "post",
+                        url: url,
+                        data: prms,
+                        contentType: "application/x-www-form-urlencoded; charset=utf-8",
+                        dataType: "json",
+                        async: async,   //true:非同期 false:同期
+                        success: function (result) {
+                            succeededCallback(result, userContext);
+                        },
+                        error: function (xhr, status, error) {
+                            if (typeof failedCallback == "function") {
+                                failedCallback(error);
+                            } else {
+                                AjaxErrorCommon(xhr, status, error);
+                            }
+                        }
+                    });
+                }
+            });
+
+    </script>
+    }
