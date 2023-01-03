@@ -1,2 +1,6 @@
 # SAML_Sample
 AzureADでのシングルサインオンサンプル
+
+MVCモデルを使用
+AzureAD側にSAMLRequestを送信しログイン画面で入力後、
+ログインが成功した場合はSAMLRequestを受け取る画面を表示する
